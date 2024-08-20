@@ -8,7 +8,7 @@ import {
   Model,
   Table,
 } from 'sequelize-typescript';
-import { Transaction } from 'src/transaction/entities/transaction.entity';
+import { Auction } from 'src/transaction/entities/auction.entity';
 import { User } from 'src/users/entities/users.entity';
 
 @Table({
@@ -65,12 +65,12 @@ export class PaymentOrder extends Model {
   })
   userId: string;
 
-  @ForeignKey(() => Transaction)
+  @ForeignKey(() => Auction)
   @Column({
     type: DataType.UUID,
     allowNull: false,
   })
-  transactionId: string;
+  auctionId: string;
 
   //Relations
 
@@ -78,6 +78,6 @@ export class PaymentOrder extends Model {
   @BelongsTo(() => User)
   user: User;
 
-  @BelongsTo(() => Transaction)
-  transaction: Transaction;
+  @BelongsTo(() => Auction)
+  auction: Auction;
 }

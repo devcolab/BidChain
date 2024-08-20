@@ -5,7 +5,7 @@ import {
   Model,
   Table,
 } from 'sequelize-typescript';
-import { Transaction } from 'src/transaction/entities/transaction.entity';
+import { Auction } from 'src/transaction/entities/auction.entity';
 import { User } from 'src/users/entities/users.entity';
 
 @Table({
@@ -38,7 +38,7 @@ export class UserAuction extends Model {
   })
   userId: string;
 
-  @ForeignKey(() => Transaction)
+  @ForeignKey(() => Auction)
   @Column({
     type: DataType.UUID,
     allowNull: false,

@@ -4,7 +4,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { Category } from '../products/entities/category.entity';
 import { PaymentOrder } from 'src/payment-orders/entities/payment-order.entity';
 import { Product } from '../products/entities/product.entity';
-import { Transaction } from 'src/transaction/entities/transaction.entity';
+import { Auction } from 'src/transaction/entities/auction.entity';
 import { User } from 'src/users/entities/users.entity';
 import { UserAuction } from 'src/user-auction/entities/user-auction.entity';
 import * as dotenv from 'dotenv';
@@ -21,7 +21,7 @@ dotenv.config();
       username: process.env.DBUSERNAME,
       password: process.env.DBPASSWORD,
       database: process.env.DBDATABASE,
-      models: [Category, PaymentOrder, Product, Transaction, User, UserAuction],
+      models: [Category, PaymentOrder, Product, Auction, User, UserAuction],
       autoLoadModels: true,
       synchronize: true,
       logging: false,
@@ -31,7 +31,7 @@ dotenv.config();
       Category,
       PaymentOrder,
       Product,
-      Transaction,
+      Auction,
       User,
       UserAuction,
     ]),

@@ -8,7 +8,7 @@ import {
 } from 'sequelize-typescript';
 import { PaymentOrder } from 'src/payment-orders/entities/payment-order.entity';
 import { Product } from 'src/products/entities/product.entity';
-import { Transaction } from 'src/transaction/entities/transaction.entity';
+import { Auction } from 'src/transaction/entities/auction.entity';
 
 import { UserAuction } from 'src/user-auction/entities/user-auction.entity';
 
@@ -79,6 +79,6 @@ export class User extends Model {
   @HasMany(() => PaymentOrder)
   paymentOrder: PaymentOrder[];
 
-  @BelongsToMany(() => Transaction, () => UserAuction)
-  auctionsAsUser: Transaction[];
+  @BelongsToMany(() => Auction, () => UserAuction)
+  auctionsAsUser: Auction[];
 }

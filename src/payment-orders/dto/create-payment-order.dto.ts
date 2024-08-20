@@ -31,7 +31,7 @@ export class CreatePaymentOrderDto {
 
   @IsNotEmpty()
   @IsUUID()
-  transactionId: string;
+  auctionId: string;
 
   @IsOptional()
   @IsString()

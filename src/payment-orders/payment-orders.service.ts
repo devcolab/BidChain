@@ -10,13 +10,13 @@ import { CreatePaymentOrderDto } from './dto/create-payment-order.dto';
 import { UpdatePaymentOrderDto } from './dto/update-payment-order.dto';
 import { PaymentOrder } from './entities/payment-order.entity';
 import { v4 as uuidv4 } from 'uuid';
-import { Transaction } from 'src/transaction/entities/transaction.entity';
+import { Auction } from 'src/transaction/entities/auction.entity';
 
 @Injectable()
 export class PaymentOrdersService {
   constructor(
     private readonly sequelize: Sequelize,
-    @InjectModel(Transaction) private transactionModel: typeof Transaction,
+    @InjectModel(Auction) private auctionModel: typeof Auction,
     @InjectModel(PaymentOrder) private paymentOrderModel: typeof PaymentOrder,
   ) {}
 
@@ -29,15 +29,15 @@ export class PaymentOrdersService {
         userId,
       });
 
-      const transaction = await this.transactionModel.findOne({
+      const auction = await this.auctionModel.findOne({
         where: {
-          id: createPaymentOrderDto.transactionId,
+          id: createPaymentOrderDto.auctionId,
         },
       });
 
-      if (transaction) {
-        transaction.active = false;
-        await transaction.save();
+      if (auction) {
+        auction.active = false;
+        await auction.save();
       }
 
       return newPaymentOrder;

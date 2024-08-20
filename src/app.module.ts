@@ -6,7 +6,7 @@ import { DatabaseModule } from './database/database.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
-import { TransactionModule } from './transaction/transaction.module';
+import { AuctionModule } from './transaction/auction.module';
 import { UserAuctionModule } from './user-auction/user-auction.module';
 import { PaymentOrdersModule } from './payment-orders/payment-orders.module';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -17,7 +17,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     DatabaseModule,
     UsersModule,
     AuthModule,
-    TransactionModule,
+    AuctionModule,
     UserAuctionModule,
     CloudinaryModule,
     PaymentOrdersModule,

@@ -10,7 +10,7 @@ import {
 import { Category } from './category.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from 'src/users/entities/users.entity';
-import { Transaction } from 'src/transaction/entities/transaction.entity';
+import { Auction } from 'src/transaction/entities/auction.entity';
 
 @Table({
   tableName: 'Products',
@@ -68,8 +68,8 @@ export class Product extends Model {
 
   // Relations
   // 1 -> 1: A product has one transaction
-  @HasOne(() => Transaction)
-  transaction: Transaction;
+  @HasOne(() => Auction)
+  transaction: Auction;
 
   // N -> 1: Many products belong to one category
   @BelongsTo(() => Category)
