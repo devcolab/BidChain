@@ -14,13 +14,13 @@ module.exports = {
      */
     const now = new Date();
 
-    const transactions = [
+    const auctions = [
       {
         id: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
         initialBid: 100,
         startDate: new Date(),
         endDate: new Date(now.getTime() + 1 * 60 * 1000),
-        transactionType: 'Buy',
+        auctionType: 'Buy',
         productId: '4f9dff8a-d10b-4d45-87e2-6e2b1caa3d5a',
         active: true,
         createdAt: new Date(),
@@ -31,7 +31,7 @@ module.exports = {
         initialBid: 100,
         startDate: new Date(),
         endDate: new Date(now.getTime() + 1 * 60 * 1000),
-        transactionType: 'Buy',
+        auctionType: 'Buy',
         productId: 'd3e8e3be-017f-4b7f-93c7-4c0a0eafed31',
         active: true,
         createdAt: new Date(),
@@ -42,7 +42,7 @@ module.exports = {
         initialBid: 100,
         startDate: new Date(),
         endDate: new Date(now.getTime() + 1 * 60 * 1000),
-        transactionType: 'Buy',
+        auctionType: 'Buy',
         productId: 'e39e9c27-7a65-47be-92e6-4c8d3b9e8a2f',
         active: true,
         createdAt: new Date(),
@@ -53,7 +53,7 @@ module.exports = {
         initialBid: 100,
         startDate: new Date(),
         endDate: new Date(now.getTime() + 1 * 60 * 1000),
-        transactionType: 'Buy',
+        auctionType: 'Buy',
         productId: '6c0e5a0f-9d1f-4938-82c3-1e4a2f7b6e2d',
         active: true,
         createdAt: new Date(),
@@ -64,7 +64,7 @@ module.exports = {
         initialBid: 100,
         startDate: new Date(),
         endDate: new Date(now.getTime() + 1 * 60 * 1000),
-        transactionType: 'Buy',
+        auctionType: 'Buy',
         productId: 'a4f9a4e7-6e2d-4d7c-8a8b-0f9d6a4e7b1c',
         active: true,
         createdAt: new Date(),
@@ -75,7 +75,7 @@ module.exports = {
         initialBid: 100,
         startDate: new Date(),
         endDate: new Date(now.getTime() + 1 * 60 * 1000),
-        transactionType: 'Auction',
+        auctionType: 'Auction',
         productId: '8b5e4d2c-7f1d-4e3a-9a7b-6d2f1a3c5e8a',
         active: true,
         createdAt: new Date(),
@@ -86,7 +86,7 @@ module.exports = {
         initialBid: 100,
         startDate: new Date(),
         endDate: new Date(now.getTime() + 1 * 60 * 1000),
-        transactionType: 'Auction',
+        auctionType: 'Auction',
         productId: '9e3b8c4d-5a2f-4d7e-8a9b-7f2d1e6c4b8a',
         active: true,
         createdAt: new Date(),
@@ -97,7 +97,7 @@ module.exports = {
         initialBid: 100,
         startDate: new Date(),
         endDate: new Date(now.getTime() + 1 * 60 * 1000),
-        transactionType: 'Auction',
+        auctionType: 'Auction',
         productId: '7f2a3c1d-8e4f-4b6a-9d7e-2b1c3e5f6a8a',
         active: true,
         createdAt: new Date(),
@@ -108,7 +108,7 @@ module.exports = {
         initialBid: 100,
         startDate: new Date(),
         endDate: new Date(now.getTime() + 1 * 60 * 1000),
-        transactionType: 'Auction',
+        auctionType: 'Auction',
         productId: '3a5e7c4d-1f2b-4d6e-8a9f-5d2c7e3b1a4a',
         active: true,
         createdAt: new Date(),
@@ -119,7 +119,7 @@ module.exports = {
         initialBid: 100,
         startDate: new Date(),
         endDate: new Date(now.getTime() + 1 * 60 * 1000),
-        transactionType: 'Auction',
+        auctionType: 'Auction',
         productId: '6e8f9b4d-3c2f-4d7a-9e5b-1d7a3c5e2b8f',
         active: true,
         createdAt: new Date(),
@@ -127,7 +127,7 @@ module.exports = {
       },
     ];
 
-    await queryInterface.bulkInsert('Transactions', transactions, {});
+    await queryInterface.bulkInsert('Actions', auctions, {});
   },
 
   async down(queryInterface, Sequelize) {
