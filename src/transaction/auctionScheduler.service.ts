@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
-import { Transaction } from './entities/transaction.entity';
+import { Auction } from './entities/auction.entity';
 import { UserAuctionService } from 'src/user-auction/user-auction.service';
 import { PaymentOrdersService } from 'src/payment-orders/payment-orders.service';
 
@@ -11,7 +11,7 @@ export class TransactionSchedulerService {
   private readonly logger = new Logger(TransactionSchedulerService.name);
 
   constructor(
-    @InjectModel(Transaction) private transactionModel: typeof Transaction,
+    @InjectModel(Auction) private auctionModel: typeof Auction,
     private readonly userAuctionService: UserAuctionService,
     private readonly paymentOrdersService: PaymentOrdersService,
   ) {}
@@ -22,7 +22,7 @@ export class TransactionSchedulerService {
 
     try {
       // Find all active auctions that have ended
-      const endedAuctions = await this.transactionModel.findAll({
+      const endedAuctions = await this.auctionModel.findAll({
         where: {
           endDate: {
             [Op.lte]: now,
@@ -31,23 +31,23 @@ export class TransactionSchedulerService {
         },
       });
 
-      for (const transaction of endedAuctions) {
+      for (const auction of endedAuctions) {
         try {
           const highestBid = await this.userAuctionService.highestBid(
-            transaction.id,
+            auction.id,
           );
 
           if (highestBid) {
-            transaction.winnerId = highestBid.user?.id;
+            auction.winnerId = highestBid.user?.id;
           }
 
-          transaction.active = false;
-          await transaction.save();
+          auction.active = false;
+          await auction.save();
 
           if (highestBid && highestBid.user) {
             await this.paymentOrdersService.create(
               {
-                transactionId: transaction.id,
+                auctionId: auction.id,
                 isPaid: false,
                 tax: 12,
                 total: highestBid.value,
@@ -58,7 +58,7 @@ export class TransactionSchedulerService {
           }
         } catch (error) {
           this.logger.error(
-            `Failed to process transaction ${transaction.id}: ${error.message}`,
+            `Failed to process auction ${auction.id}: ${error.message}`,
             error.stack,
           );
         }

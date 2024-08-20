@@ -8,7 +8,7 @@ import {
 } from 'class-validator';
 // import { AuctionType } from '../../products/entities/auction.entity';
 
-export class UpdateTransactionDto {
+export class UpdateAuctionDto {
   @IsOptional()
   @IsUUID()
   id?: string;
@@ -23,7 +23,7 @@ export class UpdateTransactionDto {
   endDate?: string;
 
   @IsEnum(['traditional auctions', 'direct purchase', 'judicial auctions'])
-  transactionType?: string;
+  auctionType?: string;
 
   @IsUUID()
   productId?: string;

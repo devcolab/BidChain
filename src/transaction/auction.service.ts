@@ -6,10 +6,10 @@ import {
 } from '@nestjs/common';
 import { Sequelize } from 'sequelize-typescript';
 import { v4 as uuidv4 } from 'uuid';
-import { UpdateTransactionDto } from './dto/update-transaction.dto';
-import { CreateTransactionDto } from './dto/create-transaction.dto';
+import { UpdateAuctionDto } from './dto/update-transaction.dto';
+import { CreateAuctionDto } from './dto/create-transaction.dto';
 import { InjectModel } from '@nestjs/sequelize';
-import { Transaction } from './entities/transaction.entity';
+import { Auction } from './entities/auction.entity';
 import { UserAuction } from '../user-auction/entities/user-auction.entity';
 import { Product } from 'src/products/entities/product.entity';
 import { User } from 'src/users/entities/users.entity';
@@ -34,10 +34,10 @@ import { PaymentOrder } from 'src/payment-orders/entities/payment-order.entity';
 // crud de usuario/transaccion
 
 @Injectable()
-export class TransactionService {
+export class AuctionService {
   constructor(
     private readonly sequelize: Sequelize,
-    @InjectModel(Transaction) private transactionModel: typeof Transaction,
+    @InjectModel(Auction) private auctionModel: typeof Auction,
     @InjectModel(UserAuction) private userAuctionModel: typeof UserAuction,
     @InjectModel(Product) private productModel: typeof Product,
     @InjectModel(PaymentOrder) private paymentOrderModel: typeof PaymentOrder,
@@ -46,20 +46,20 @@ export class TransactionService {
   ) {}
 
   // cuando es compra directa crear orden de pago
-  async create(createTransactionDto: CreateTransactionDto, userId: string) {
+  async create(createAuctionDto: CreateAuctionDto, userId: string) {
     try {
-      const transaction = await this.transactionModel.create({
+      const auction = await this.auctionModel.create({
         id: uuidv4(),
-        initialBid: createTransactionDto.initialBid,
+        initialBid: createAuctionDto.initialBid,
         startDate: new Date(),
-        endDate: createTransactionDto.endDate,
-        transactionType: createTransactionDto.transactionType,
-        productId: createTransactionDto.productId,
+        endDate: createAuctionDto.endDate,
+        auctionType: createAuctionDto.auctionType,
+        productId: createAuctionDto.productId,
       });
 
       const product = await this.productModel.findOne({
         where: {
-          id: createTransactionDto.productId,
+          id: createAuctionDto.productId,
         },
       });
 
@@ -67,9 +67,9 @@ export class TransactionService {
         throw new NotFoundException('Product not found');
       }
 
-      await transaction.save();
+      await auction.save();
 
-      return transaction;
+      return auction;
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);
@@ -78,7 +78,7 @@ export class TransactionService {
       } else {
         console.error(error);
         throw new HttpException(
-          'Error creating transaction',
+          'Error creating auction',
           HttpStatus.INTERNAL_SERVER_ERROR,
         );
       }
@@ -87,13 +87,13 @@ export class TransactionService {
 
   async findAll() {
     try {
-      const transactions = await Transaction.findAll();
+      const auctions = await Auction.findAll();
 
-      return { success: true, data: transactions };
+      return { success: true, data: auctions };
     } catch (error) {
       console.log(error);
       throw new HttpException(
-        'Error getting all transactions',
+        'Error getting all auctions',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
@@ -101,38 +101,38 @@ export class TransactionService {
 
   async findOne(id: string) {
     try {
-      const transaction = await Transaction.findOne({
+      const auction = await Auction.findOne({
         where: {
           id: id,
         },
       });
 
-      if (!transaction) {
-        throw new HttpException('Transaction not found', HttpStatus.NOT_FOUND);
+      if (!auction) {
+        throw new HttpException('Auction not found', HttpStatus.NOT_FOUND);
       }
-      return transaction;
+      return auction;
     } catch (error) {
       console.log(error);
       throw new HttpException(
-        `Error getting transaction by id #${id}`,
+        `Error getting auction by id #${id}`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   }
 
-  async update(id: string, updateTransactionDto: UpdateTransactionDto) {
+  async update(id: string, updateAuctionDto: UpdateAuctionDto) {
     try {
-      const transaction = await this.findOne(id);
-      if (!transaction) {
-        throw new NotFoundException(`Error getting transaction by id #${id}`);
+      const auction = await this.findOne(id);
+      if (!auction) {
+        throw new NotFoundException(`Error getting auction by id #${id}`);
       }
 
-      await transaction.update(updateTransactionDto);
-      return transaction;
+      await auction.update(updateAuctionDto);
+      return auction;
     } catch (error) {
       console.log(error);
       throw new HttpException(
-        'Error updating transaction',
+        'Error updating auction',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
@@ -140,35 +140,35 @@ export class TransactionService {
 
   async partialUpdate(
     id: string,
-    updateTransactionDto: Partial<UpdateTransactionDto>,
+    updateAuctiontionDto: Partial<UpdateAuctionDto>,
   ) {
     try {
-      const transaction = await this.findOne(id);
-      if (!transaction) {
-        throw new NotFoundException('Transaction not found');
+      const auction = await this.findOne(id);
+      if (!auction) {
+        throw new NotFoundException('Auction not found');
       }
 
-      await transaction.update(updateTransactionDto);
-      return { success: true, data: transaction };
+      await auction.update(updateAuctiontionDto);
+      return { success: true, data: auction };
     } catch (error) {
       console.error(error);
-      throw new Error('Error partially updating the transaction');
+      throw new Error('Error partially updating the auction');
     }
   }
 
   async remove(id: string) {
     try {
-      const transaction = await this.findOne(id);
-      if (!transaction) {
-        throw new NotFoundException('Transaction not found');
+      const auction = await this.findOne(id);
+      if (!auction) {
+        throw new NotFoundException('Auction not found');
       }
 
-      await transaction.destroy();
+      await auction.destroy();
       return { success: true };
     } catch (error) {
       console.log(error);
       throw new HttpException(
-        `Error deleting transaction by id #${id}`,
+        `Error deleting auction by id #${id}`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
@@ -176,12 +176,12 @@ export class TransactionService {
 
   async remainingAuctionTime(id: string): Promise<string> {
     try{
-      const transaction = await this.transactionModel.findByPk(id);
-      if (!transaction) {
-        throw new NotFoundException('Transaction not found');
+      const auction = await this.auctionModel.findByPk(id);
+      if (!auction) {
+        throw new NotFoundException('Auction not found');
       }
       const now = new Date();
-      const endTime = new Date(transaction.endDate);
+      const endTime = new Date(auction.endDate);
       const remainingTime = endTime.getTime() - now.getTime();
       const remainingSeconds = Math.floor((remainingTime / 1000) % 60);
     const remainingMinutes = Math.floor((remainingTime / (1000 * 60)) % 60);
@@ -200,17 +200,17 @@ export class TransactionService {
         
   async findByUserId(userId: string) {
     try {
-      const transactions = await this.transactionModel.findAll({
+      const auctions = await this.auctionModel.findAll({
         where: {
           userId: userId,
         },
       });
 
-      return { success: true, data: transactions };
+      return { success: true, data: auctions };
     } catch (error) {
       console.log(error);
       throw new HttpException(
-        `Error getting transactions by user id #${userId}`,
+        `Error getting auctions by user id #${userId}`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

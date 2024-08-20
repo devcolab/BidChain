@@ -15,15 +15,15 @@ import { UserAuction } from 'src/user-auction/entities/user-auction.entity';
 import { User } from 'src/users/entities/users.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
-export enum TransactionType {
+export enum AuctionType {
   Auction = 'Auction',
   Buy = 'Buy',
 }
 
 @Table({
-  tableName: 'Transactions',
+  tableName: 'auctions',
 })
-export class Transaction extends Model {
+export class Auction extends Model {
   @Column({
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,
@@ -63,12 +63,12 @@ export class Transaction extends Model {
 
   @ApiProperty({
     example: 'Buy',
-    enum: TransactionType,
-    description: 'The type of transaction',
+    enum: AuctionType,
+    description: 'The type of auction',
   })
   @Column({
     type: DataType.ENUM,
-    values: Object.values(TransactionType),
+    values: Object.values(AuctionType),
     allowNull: false,
   })
   transactionType: string;

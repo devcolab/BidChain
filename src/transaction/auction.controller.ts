@@ -10,24 +10,24 @@ import {
   UseGuards,
   Req,
 } from '@nestjs/common';
-import { TransactionService } from './transaction.service';
-import { CreateTransactionDto } from './dto/create-transaction.dto';
-import { UpdateTransactionDto } from './dto/update-transaction.dto';
+import { AuctionService } from './auction.service';
+import { CreateAuctionDto } from './dto/create-transaction.dto';
+import { UpdateAuctionDto } from './dto/update-transaction.dto';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Request } from 'express';
 import { GetUser } from 'src/auth/decorator/auth-user-decorator';
 import { IGetUser } from 'src/auth/interfaces/getUser.interface';
 
-@Controller('transactions')
-@ApiTags('transactions')
-export class TransactionController {
-  constructor(private readonly transactionService: TransactionService) {}
+@Controller('auctions')
+@ApiTags('auctions')
+export class AuctionController {
+  constructor(private readonly auctionService: AuctionService) {}
 
   @Post()
-  @ApiOperation({ summary: 'Create a new transaction' })
+  @ApiOperation({ summary: 'Create a new auction' })
   @ApiBody({
-    description: 'Create a new transaction',
+    description: 'Create a new auction',
     schema: {
       example: {
         initialBid: 1000.5,
@@ -43,44 +43,44 @@ export class TransactionController {
       },
     },
   })
-  @ApiResponse({ status: 200, description: 'Return a new transaction.' })
+  @ApiResponse({ status: 200, description: 'Return a new auction.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @UseGuards(JwtAuthGuard)
   create(
     @GetUser() { userId }: IGetUser,
-    @Body() createTransactionDto: CreateTransactionDto,
+    @Body() createauctionDto: CreateAuctionDto,
   ) {
-    return this.transactionService.create(createTransactionDto, userId);
+    return this.auctionService.create(createauctionDto, userId);
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get all transactions' })
-  @ApiResponse({ status: 200, description: 'Return all transactions.' })
+  @ApiOperation({ summary: 'Get all auctions' })
+  @ApiResponse({ status: 200, description: 'Return all auctions.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   findAll() {
-    return this.transactionService.findAll();
+    return this.auctionService.findAll();
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Get transaction by ID' })
-  @ApiResponse({ status: 200, description: 'Return transaction.' })
+  @ApiOperation({ summary: 'Get auction by ID' })
+  @ApiResponse({ status: 200, description: 'Return auction.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   findOne(@Param('id') id: string) {
-    return this.transactionService.findOne(id);
+    return this.auctionService.findOne(id);
   }
 
   @Get('user')
-  @ApiOperation({ summary: 'Get all transactions by user' })
-  @ApiResponse({ status: 200, description: 'Return all transactions by user.' })
+  @ApiOperation({ summary: 'Get all auctions by user' })
+  @ApiResponse({ status: 200, description: 'Return all auctions by user.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @UseGuards(JwtAuthGuard)
   findAllByUser(@GetUser() { userId }: IGetUser) {
-    return this.transactionService.findByUserId(userId);
+    return this.auctionService.findByUserId(userId);
   }
 
   @Put(':id')
   @ApiBody({
-    description: 'Update transaction',
+    description: 'Update auction',
     schema: {
       example: {
         initialBid: 1000.5,
@@ -96,19 +96,19 @@ export class TransactionController {
       },
     },
   })
-  @ApiOperation({ summary: 'Update an existing transaction' })
-  @ApiResponse({ status: 200, description: 'Returns the updated transaction.' })
+  @ApiOperation({ summary: 'Update an existing auction' })
+  @ApiResponse({ status: 200, description: 'Returns the updated auction.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   update(
     @Param('id') id: string,
-    @Body() updateTransactionDto: UpdateTransactionDto,
+    @Body() updateAuctionDto: UpdateAuctionDto,
   ) {
-    return this.transactionService.update(id, updateTransactionDto);
+    return this.auctionService.update(id, updateAuctionDto);
   }
 
   @Patch(':id')
   @ApiBody({
-    description: 'Partial upgrade transaction',
+    description: 'Partial upgrade auction',
     schema: {
       example: {
         initialBid: 1000.5,
@@ -124,28 +124,28 @@ export class TransactionController {
       },
     },
   })
-  @ApiOperation({ summary: 'Partially update an existing transaction' })
+  @ApiOperation({ summary: 'Partially update an existing auction' })
   @ApiResponse({
     status: 200,
-    description: 'Returns the partially updated transaction.',
+    description: 'Returns the partially updated auction.',
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   partialUpdate(
     @Param('id') id: string,
-    @Body() updateTransactionDto: UpdateTransactionDto,
+    @Body() updateAuctionDto: UpdateAuctionDto,
   ) {
-    return this.transactionService.partialUpdate(id, updateTransactionDto);
+    return this.auctionService.partialUpdate(id, updateAuctionDto);
   }
 
   @Delete(':id')
-  @ApiOperation({ summary: 'Remove an transaction' })
+  @ApiOperation({ summary: 'Remove an auction' })
   @ApiResponse({
     status: 200,
-    description: 'The transaction has been successfully removed.',
+    description: 'The auction has been successfully removed.',
   })
-  @ApiResponse({ status: 404, description: 'Transaction not found.' })
+  @ApiResponse({ status: 404, description: 'Auction not found.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   remove(@Param('id') id: string) {
-    return this.transactionService.remove(id);
+    return this.auctionService.remove(id);
   }
 }
